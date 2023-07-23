@@ -11,9 +11,18 @@ body{
 	animation: gradient 15s ease infinite;
 	height: 100vh;
 }
+.parent{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.Title{
+  font-style: italic;
+}
 main{
   max-width: 540px;
-  margin: 30px auto;
+  margin: 30px 40px;
   background-color: #ffffff1b;
   padding: 30px 10px;
   border-radius: 10px;
@@ -23,7 +32,7 @@ main{
 main:hover{
   box-shadow:  0 0 50px 20px rgba(0, 0, 0, 0.095);
 }
-h1{
+main h1{
   text-align: center;
   color: white;
   margin: 0;
@@ -52,8 +61,8 @@ form input{
   
 }
 
-form input[type="datetime-local"]{
-  color: #777;
+form input[type="date"]{
+  color:#dddddd77;
 }
 
 form button{

@@ -12,23 +12,23 @@ function App() {
 
   useEffect(() => {
     getTransactions().then(setTransactions);
-    if(deleteT !== ''){
-       deleteTransaction();
+    if (deleteT !== '') {
+      deleteTransaction();
     }
   }, [chck, deleteT])
 
-  async function deleteTransaction(){
-    try{
+  async function deleteTransaction() {
+    try {
       const url = process.env.REACT_APP_API_URL + '/transactionDelete';
       const response = await axios.delete(url, {
         headers: { 'Content-Type': 'application/json' },
         data: { _id: deleteT }
       });
       console.log('Deleted Transaction:', response.data);
-    }catch(error){
+    } catch (error) {
       console.error('Error: ', error);
     }
-      setDelete('');
+    setDelete('');
   }
 
   async function getTransactions() {
@@ -51,73 +51,76 @@ function App() {
         datetime
       })
     })
-    .then((response) => {
-      response.json().then((json) => {
-        getTransactions().then(setTransactions);
-        setDatetime('');
-        setName('');
-        setDescription('');
+      .then((response) => {
+        response.json().then((json) => {
+          getTransactions().then(setTransactions);
+          setDatetime('');
+          setName('');
+          setDescription('');
+        })
       })
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   }
   let balance = 0;
-  for( const transaction of transactions){
+  for (const transaction of transactions) {
     balance = balance + transaction.price;
   }
   let cents = 0;
-  cents = Math.floor((balance - Math.floor(balance))*100);
-  let total= 0;
+  cents = Math.floor((balance - Math.floor(balance)) * 100);
+  let total = 0;
   total = cents + balance;
   return (
-    <main>
-      <h1 className={(total >= 0?'green':'red')}>${Math.floor(balance)}<span>.{cents}</span></h1>
-      <form onSubmit={addNewTransaction}>
-        <div className="basic">
-          <input
-            type="text"
-            value={name}
-            onChange={ev => setName(ev.target.value)}
-            placeholder={'+400 SAMSUNG TV'} />
-          <input
-            type="date"
-            value={datetime}
-            onChange={ev => setDatetime(ev.target.value)} />
-        </div>
-        <div className="description">
-          <input
-            type="text"
-            value={description}
-            onChange={ev => setDescription(ev.target.value)}
-            placeholder={'description'} />
-        </div>
-        <button type="submit" onClick={()=>setChck(prev=>prev+1)}>Add new transaction</button>
-      </form>
-      <div>
-        <div className="transactions">
-          {transactions.length  > 0 && transactions.map(transaction => (
-            <div>
-              <div className={"transaction "+(transaction.price < 0?'red':"green")}>
-                <div className="left">
-                  <div className="name">{transaction.name}</div>
-                  <div className="description">{transaction.description}</div>
+    <div className='parent'>
+      <h1 className='Title'>Money Tracker</h1>
+      <main>
+        <h1 className={(total >= 0 ? 'green' : 'red')}>${Math.floor(balance)}<span>.{cents}</span></h1>
+        <form onSubmit={addNewTransaction}>
+          <div className="basic">
+            <input
+              type="text"
+              value={name}
+              onChange={ev => setName(ev.target.value)}
+              placeholder={'+400 SAMSUNG TV'} />
+            <input
+              type="date"
+              value={datetime}
+              onChange={ev => setDatetime(ev.target.value)} />
+          </div>
+          <div className="description">
+            <input
+              type="text"
+              value={description}
+              onChange={ev => setDescription(ev.target.value)}
+              placeholder={'description'} />
+          </div>
+          <button type="submit" onClick={() => setChck(prev => prev + 1)}>Add new transaction</button>
+        </form>
+        <div>
+          <div className="transactions">
+            {transactions.length > 0 && transactions.map(transaction => (
+              <div>
+                <div className={"transaction " + (transaction.price < 0 ? 'red' : "green")}>
+                  <div className="left">
+                    <div className="name">{transaction.name}</div>
+                    <div className="description">{transaction.description}</div>
+                  </div>
+                  <div className="right">
+                    <div className="price ">{(transaction.price < 0 ? '-' : "+")}${(transaction.price < 0 ? -1 : 1) * transaction.price}</div>
+                    <div className="datetime">{transaction.datetime.substring(0, 10)}</div>
+                  </div>
+                  <button
+                    className='TransactionButton'
+                    onClick={() => setDelete(transaction._id)
+                    }><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </div>
-                <div className="right">
-                  <div className="price ">{(transaction.price < 0?'-':"+")}${(transaction.price < 0?-1:1) * transaction.price}</div>
-                  <div className="datetime">{transaction.datetime.substring(0, 10)}</div>
-                </div>
-            <button 
-            className='TransactionButton' 
-            onClick={()=>setDelete(transaction._id)
-            }><i class="fa fa-trash" aria-hidden="true"></i></button>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 export default App;
